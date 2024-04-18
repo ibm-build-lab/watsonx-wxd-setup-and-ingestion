@@ -1,0 +1,15 @@
+{
+    "processors": [
+      {
+        "redact": {
+            "field": "body_content",
+            "patterns": [
+              "%{IP:REDACTED_IP}",
+              "%{EMAILADDRESS:REDACTED_EMAIL}"
+            ],
+            "prefix": "*",
+            "suffix": "*"
+        }
+      }
+    ]
+  }

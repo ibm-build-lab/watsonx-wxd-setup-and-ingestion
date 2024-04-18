@@ -1,0 +1,42 @@
+python-dotenv
+# Llamaindex
+llama-index==0.10.9
+llama-index-vector-stores-elasticsearch
+llama-index-embeddings-elasticsearch
+llama-index-llms-watsonx
+# File Reading
+llama-index-readers-file
+unstructured[pptx]
+docx2txt
+pypdf
+bs4
+# Elasticsearch
+elasticsearch[async]
+# eland[pytorch]
+# Typing extensions
+typing-extensions==4.9
+mypy-extensions==1.0.0
+types-requests
+types-PyYAML
+
+# IBM Libraries
+ibm-watson-machine-learning
+ibm-cloud-sdk-core
+ibm-cos-sdk
+ibm-generative-ai
+
+# App related dependenciesß
+uvicorn
+fastapi
+
+# Pre-commit and other formatting tools
+pre-commit
+black
+pylint
+mypy
+types-PyYAML
+types-requests
+types-tqdm
+types-pytz
+pandas-stubs
+

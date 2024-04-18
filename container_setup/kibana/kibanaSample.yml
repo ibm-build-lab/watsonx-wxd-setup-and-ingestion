@@ -1,0 +1,10 @@
+elasticsearch:
+  ssl:
+    certificateAuthorities: "/usr/share/kibana/config/cacert"
+  username: "<Elasticsearch username"
+  password: "<Elasticsearch password>"
+  hosts: 
+    - "https://<hostname:port>"
+server:
+  name: "kibana"
+  host: "0.0.0.0"

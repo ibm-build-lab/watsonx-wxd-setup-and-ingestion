@@ -1,0 +1,78 @@
+This .txt file contains the equivalent console commands to the python script setup.py. Running these console commands 
+sequentially on the dev console in Kibana is functionally equivalent to running setup.py
+
+POST /_license/start_trial?acknowledge=true
+
+PUT _ml/trained_models/.elser_model_1
+{
+  "input": {
+	"field_names": ["text_field"]
+  }
+}
+
+POST _ml/trained_models/.elser_model_1/deployment/_start?deployment_id=for_search
+
+PUT wxd-rag
+{
+  "mappings": {
+    "properties": {
+      "text": { 
+        "type": "text" 
+      }
+    }
+  }
+}
+
+PUT _ingest/pipeline/elser_inference
+{
+  "description": "",
+  "processors": [
+    {
+      "remove": {
+        "field": "ml.inference.text_expanded",
+        "ignore_missing": true
+      }
+    },
+    {
+      "inference": {
+        "field_map": {
+          "text": "text_field"
+        },
+        "model_id": ".elser_model_1",
+        "on_failure": [
+          {
+            "append": {
+              "field": "_source._ingest.inference_errors",
+              "allow_duplicates": false,
+              "value": [
+                {
+                  "message": "Processor 'inference' in pipeline 'wxd-rag' failed for field 'text' with message '{{ _ingest.on_failure_message }}'",
+                  "pipeline": "wxd-rag",
+                  "timestamp": "{{{ _ingest.timestamp }}}"
+                }
+              ]
+            }
+          }
+        ],
+        "target_field": "ml.inference.text_expanded"
+      }
+    },
+    {
+      "append": {
+        "field": "_source._ingest.processors",
+        "value": [
+          {
+            "model_version": "10.0.0",
+            "pipeline": "wxd-rag",
+            "processed_timestamp": "{{{ _ingest.timestamp }}}",
+            "types": [
+              "pytorch",
+              "text_expansion"
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "version": 1
+}

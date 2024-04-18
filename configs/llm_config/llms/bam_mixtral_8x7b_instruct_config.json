@@ -1,0 +1,14 @@
+{
+    "service_name": "BAM",
+    "model_name": "ibm-mistralai/mixtral-8x7b-instruct-v01-q",
+    "model_params": {
+        "decoding_method": "sample",
+        "min_new_tokens": 1,
+        "max_new_tokens": 500,
+        "repetition_penalty": 1.2,
+        "temperature": 0.7,
+        "top_k": 50,
+        "top_p": 0.15,
+        "stop_sequences": ["<|endoftext|>", "}]", "\n\n\n"]
+    }
+}

@@ -1,0 +1,12 @@
+{
+  "mappings": {
+    "properties": {
+      "ml.{{index_embedding_field}}": { 
+        "type": "rank_features" 
+      },
+      "{{index_text_field}}": { 
+        "type": "text" 
+      }
+    }
+  }
+}

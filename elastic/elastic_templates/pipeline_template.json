@@ -1,0 +1,19 @@
+{
+  "description": "Inference pipeline using elser model",
+  "processors": [
+    {
+      "inference": {
+        "field_map": {
+          "{{index_text_field}}": "{{embedding_model_text_field}}"
+        },
+        "model_id": "{{embedding_model_id}}",
+        "target_field": "ml",
+        "inference_config": {
+          "text_expansion": { 
+            "results_field": "{{index_embedding_field}}"
+          }
+        }
+      }
+    }
+  ]
+}

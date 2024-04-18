@@ -1,0 +1,29 @@
+{
+  "processors": [
+    {
+      "redact": {
+        "field": "text",
+        "patterns": [
+          "%{IP:REDACTED}",
+          "%{EMAILADDRESS:REDACTED}"
+        ],
+        "prefix": "*",
+        "suffix": "*"
+      }
+    },
+    {
+      "inference": {
+        "model_id": ".elser_model_1",
+        "field_map": { 
+          "text": "text_field"
+        },
+        "target_field": "ml",
+        "inference_config": {
+          "text_expansion": { 
+            "results_field": "tokens"
+          }
+        }
+      }
+    }
+  ]
+}

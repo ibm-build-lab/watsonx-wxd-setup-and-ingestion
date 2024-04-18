@@ -1,0 +1,22 @@
+# Ingest related configuration
+ingest: 
+  file_store:  
+    type: "local" # "cos" or "local"
+    location: "data/nvidia/answers" # if cos, the name of the bucket. if local, the directory path
+    service_credentials_path: null
+    num_files_to_ingest: 500
+  elasticsearch:
+    index_name: "index-created-in-setup-ingestion-repo-sample-config" # name of the index to ingest into
+    index_text_field: "body_content_field" # name of the field in the index used to store document text
+    index_embedding_field: "sparse_embedding" # name of the field in the index used to store document embeddings
+    pipeline_name: "elser_ingestion" # name of the pipeline to use for ingestion
+    embedding_model_id: ".elser_model_1" # name of the embedding model to use for ingestion
+    embedding_model_text_field: "text_field" # name of the field the embedding model looks for text in
+  chunk_size: 256 # number of tokens per chunk
+  chunk_overlap: 128 # number of tokens to overlap between chunks
+
+# Query related configuration
+query:
+  num_docs_to_retrieve: 5
+  llm_path: "configs/llm_config/llms/bam_mixtral_8x7b_instruct_config.json"
+  prompt_template_path: "configs/llm_config/prompt_templates/basic_rag_template.txt"

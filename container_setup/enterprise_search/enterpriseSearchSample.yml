@@ -1,0 +1,14 @@
+secret_management:
+  encryption_keys: "[<YOUR_ENCRYPTION_KEY>]" #c34d38b3a14956121ff2170e5030b471551370178f43e5626eec58b04a30fae2
+allow_es_settings_modification: "true"
+elasticsearch:
+  host: "https://<hostname>:<port>"
+  username: "<username>"
+  password: "<password>"
+  ssl:
+    enabled: "true"
+    certificate_authority: "/usr/share/enterprise-search/es-config/tls.crt"
+kibana:
+  external_url: "http://kibana:5601"
+ent_search:
+  external_url: "http://enterprise-search:3002"

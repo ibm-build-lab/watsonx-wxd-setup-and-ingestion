@@ -1,0 +1,8 @@
+{
+    "text_expansion": {
+        "ml.{{index_embedding_field}}": {
+            "model_id": "{{embedding_model_id}}", 
+            "model_text": "{{query}}"
+        }
+    }
+}
