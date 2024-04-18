@@ -14,6 +14,8 @@
           }
         }
       }
-    }
+    },
+    {"set": {"field": "file_name", "value": "{{metadata.file_name}}"}},
+    {"set": {"field": "url", "value": "{{metadata.url}}"}}
   ]
 }

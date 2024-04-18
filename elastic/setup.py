@@ -268,7 +268,7 @@ class SetupScriptArgs:
     config_file_path: str
     start_trial_license: bool
     download_and_deploy_pretrained_model: bool
-    create_elser_ingestion_index: bool
+    #create_elser_ingestion_index: bool
 
 
 def parse_main_args() -> SetupScriptArgs:
@@ -291,18 +291,18 @@ def parse_main_args() -> SetupScriptArgs:
         action="store_true",
         help="Whether to download and deploy the pretrained model",
     )
-    parser.add_argument(
-        "--create_index",
-        "-i",
-        action="store_false",
-        help="Whether to create the index with the ELSER ingestion pipeline",
-    )
+    # parser.add_argument(
+    #     "--create_index",
+    #     "-i",
+    #     action="store_false",
+    #     help="Whether to create the index with the ELSER ingestion pipeline",
+    # )
     args = parser.parse_args()
     return SetupScriptArgs(
         config_file_path=args.config_file_path,
         start_trial_license=args.start_trial_license,
         download_and_deploy_pretrained_model=args.download_and_deploy_pretrained_model,
-        create_elser_ingestion_index=args.create_index,
+        # create_elser_ingestion_index=args.create_index,
     )
 
 
@@ -326,9 +326,10 @@ def main():
             model_text_field=EMBEDDING_MODEL_TEXT_FIELD,
         )
         deploy_model(client, model_id=EMBEDDING_MODEL_ID)
-    if args.create_elser_ingestion_index:
-        create_index_with_elser_ingestion_pipeline(client, INDEX_NAME)
+    # if args.create_elser_ingestion_index:
+        # create_index_with_elser_ingestion_pipeline(client, INDEX_NAME)
 
 
 if __name__ == "__main__":
     main()
+

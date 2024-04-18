@@ -3,6 +3,8 @@ import asyncio
 import logging
 import os
 import sys
+import nltk
+nltk.download('averaged_perceptron_tagger')
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parent_directory = os.path.dirname(current_directory)
