@@ -35,7 +35,7 @@ Currently supported file locations:
 
 ## Prerequisites
 
-This repository assumes that you have an instance of Databases for Elasticsearch Platinum edition deployed on IBM Cloud. The Platinum edition is required to use the ELSER model in Elasticsearch, which is leveraged for semantic search. If this is not available, you can also test this repository using Elasticsearch deployed on an Openshift cluster or locally. For guidance on deploying Elasticsearch locally, refer to the [official Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/run-elasticsearch-locally.html), or use the Dockerfile provided in the docker_setup directory.
+This repository assumes that you have an instance of Databases for Elasticsearch Platinum edition deployed on IBM Cloud. The Platinum edition is required to use the ELSER model in Elasticsearch, which is leveraged for semantic search. If this is not available, you can also test this repository using Elasticsearch deployed on an Openshift cluster or locally. For guidance on deploying Elasticsearch locally, refer to the [official Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/run-elasticsearch-locally.html), or use the Dockerfile provided in the `container_setup` directory.
 
 ## Using The Repository
 
