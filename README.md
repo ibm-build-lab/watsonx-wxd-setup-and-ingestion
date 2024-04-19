@@ -97,8 +97,8 @@ Once you have these credentials, make a .env file containing these credentials. 
 python3 elastic/utils.py
 ```
 
-### Sourcing your documents
-The next step is to source your documents that you wish to ingest into Elasticsearch. documents can be ingested into Elasticsearch via a directory on your local machine or through a bucket in Cloud Object Storage on IBM Cloud. For details on setting up a Cloud Object Storage bucket, refer to this documentation [README in the COS folder](COS/README.md). Currently, the supported file types are `.pdf, .txt, .docx, .pptx`. Note that not all `.pptx` files may be supported. If you wish to ingest documents through a local directory, save all the documents to a directory and note the path of the directory. If you wish to ingest documents through Cloud Object Storage, load the files documents into a bucket in your configured instance of Cloud Object Storage and save the name of the bucket. A small collection of sample documents is provided below in the [sample data section](#sample-data).
+### Ingesting your documents
+The next step is to source your documents that you wish to ingest into Elasticsearch. Documents can be ingested into Elasticsearch via a directory on your local machine or through a bucket in Cloud Object Storage on IBM Cloud. For details on setting up a Cloud Object Storage bucket, refer to this documentation [README in the COS folder](COS/README.md). Currently, the supported file types are `.pdf, .txt, .docx, .pptx`. Note that not all `.pptx` files may be supported. If you wish to ingest documents through a local directory, save all the documents to a directory and note the path of the directory. If you wish to ingest documents through Cloud Object Storage, load the files documents into a bucket in your configured instance of Cloud Object Storage and save the name of the bucket. A small collection of sample documents is provided below in the [sample data section](#sample-data).
 
 #### Customize the config YAML file
 
