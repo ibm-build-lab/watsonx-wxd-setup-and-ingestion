@@ -122,26 +122,29 @@ The scripts for setting up Elasticsearch and ingesting your documents can be con
 | `query.num_docs_to_retrieve`           | `5`                                                   | The number of documents to retrieve on querying.                                                  |
 | `query.llm_path`                       | `configs/llm_config/llms/wml_granite_13b_chat_config.json` | The path to the LLM configuration.                                                               |
 | `query.prompt_template_path`           | `configs/llm_config/prompt_templates/basic_rag_template.txt` | The path to the prompt template. |
-#### Setup and Ingest into Elastisearch
-Once you have finished making your config file, copy the path to your config and run the following python script if you need to setup Elastisearch. Skip this step if you already have an Elasticsearch database configured:
+#### Setup and Ingest into Elasticsearch
+Once you have finished making your config file, copy the path to your config and run the following python script if you need to setup Elasticsearch. 
 
- ```shell
- python3 elastic/setup.py [-s -d ] -c "path/to/your/config/file.yaml"
- ```
+- Run the `setup.py` script to setup Elasticsearch. Skip this step if you already have an Elasticsearch database configured:
 
-This script will use the configuration file and does the following in sequence:
+  ```shell
+  python3 elastic/setup.py [-s -d ] -c "path/to/your/config/file.yaml"
+  ```
 
-1. Try to activate a trial Elasticsearch license if -s is specified, ignores if not
-2. Download and deploy the ELSER model from Elastic's servers if -d is specified, ignores if not
+  This script will use the configuration file and does the following in sequence:
 
-To ingest your documentation, run the following:
-```python
- python3 elastic/ingest.py -c "path/to/your/config/file.yaml"
- ```
- This script will use the configuration file and does the following in sequence:
+  1. Try to activate a trial Elasticsearch license if -s is specified, ignores if not
+  2. Download and deploy the ELSER model from Elastic's servers if -d is specified, ignores if not
 
-1. Creates an index with the index name specified in the config file based on ```elastic/configs/index_config.json``` and a default pipeline with a name specified in the config file based on ```elastic/configs/inference_pipeline_config.json```
-2. Use the pipeline to ingest your documents into the index based on the fields under the `ingest` section of the config. 
+- To ingest your documentation, run the `ingest.py` script:
+  ```python
+  python3 elastic/ingest.py -c "path/to/your/config/file.yaml"
+  ```
+  This script will use the configuration file and does the following in sequence:
+
+  1. Creates an index with the index name specified in the config file based on ```elastic/configs/index_config.json``` and a default pipeline with a name specified in the config file based on 
+  ```elastic/configs/inference_pipeline_config.json```
+  2. Use the pipeline to ingest your documents into the index based on the fields under the `ingest` section of the config. 
 
 Once ingestion is complete, your documents are ready to be used for RAG use cases. 
 
