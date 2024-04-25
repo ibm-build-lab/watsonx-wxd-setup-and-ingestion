@@ -18,5 +18,5 @@ ingest:
 # Query related configuration
 query:
   num_docs_to_retrieve: 5
-  llm_path: "configs/llm_config/llms/bam_mixtral_8x7b_instruct_config.json"
+  llm_path: "configs/llm_config/llms/wml_granite_13b_chat_config.json" #  llm_path: "configs/llm_config/llms/bam_mixtral_8x7b_instruct_config.json"
   prompt_template_path: "configs/llm_config/prompt_templates/basic_rag_template.txt"
