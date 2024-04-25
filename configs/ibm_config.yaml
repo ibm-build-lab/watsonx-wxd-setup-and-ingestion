@@ -12,11 +12,11 @@ ingest:
     pipeline_name: "elser_ingestion" # name of the pipeline to use for ingestion
     embedding_model_id: ".elser_model_1" # name of the embedding model to use for ingestion
     embedding_model_text_field: "text_field" # name of the field the embedding model looks for text in
-  chunk_size: 256 # number of tokens per chunk
+  chunk_size: 512 # number of tokens per chunk
   chunk_overlap: 128 # number of tokens to overlap between chunks
 
 # Query related configuration
 query:
-  num_docs_to_retrieve: 5
-  llm_path: "configs/llm_config/llms/bam_mixtral_8x7b_instruct_config.json"
+  num_docs_to_retrieve: 3
+  llm_path: "configs/llm_config/llms/wml_granite_13b_chat_config.json" #  llm_path: "configs/llm_config/llms/bam_mixtral_8x7b_instruct_config.json"
   prompt_template_path: "configs/llm_config/prompt_templates/basic_rag_template.txt"
