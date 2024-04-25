@@ -1,10 +1,12 @@
-Copy .envExample to .env and fill in values for 
+To deploy enterprise search, Kibana and Elasticsearch in the same docker network, locally on your machine:
+
+1. Copy .envExample to .env and fill in values for 
 ```
 ELASTIC_PASSWORD="changeme"
 KIBANA_PASSWORD="changeme"
 ```
 
-Run 
+2. Run 
 ```
 docker compose up
 ```
