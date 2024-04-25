@@ -98,7 +98,13 @@ python3 elastic/utils.py
 ```
 
 ### Ingesting your documents
-The next step is to source your documents that you wish to ingest into Elasticsearch. Documents can be ingested into Elasticsearch via a directory on your local machine or through a bucket in Cloud Object Storage on IBM Cloud. For details on setting up a Cloud Object Storage bucket, refer to this documentation [README in the COS folder](COS/README.md). Currently, the supported file types are `.pdf, .txt, .docx, .pptx`. Note that not all `.pptx` files may be supported. If you wish to ingest documents through a local directory, save all the documents to a directory and note the path of the directory. If you wish to ingest documents through Cloud Object Storage, load the files documents into a bucket in your configured instance of Cloud Object Storage and save the name of the bucket. A small collection of sample documents is provided below in the [sample data section](#sample-data).
+The next step is to source your documents that you wish to ingest into Elasticsearch. Documents can be ingested into Elasticsearch via a directory on your local machine or through a bucket in Cloud Object Storage on IBM Cloud. Currently, the supported file types are `.pdf, .txt, .docx, .pptx`. Note that not all `.pptx` files may be supported. 
+
+- If you wish to ingest documents through a local directory, save all the documents to a directory and note the path of the directory. All documents within the directory path will be ingested.
+
+- If you wish to ingest documents through Cloud Object Storage, load the files documents into a bucket in your configured instance of Cloud Object Storage and save the name of the bucket. For details on setting up a Cloud Object Storage bucket, refer to this documentation [README in the COS folder](COS/README.md). 
+
+A small collection of sample documents is provided below in the [sample data section](#sample-data).
 
 #### Customize the config YAML file
 
@@ -114,12 +120,12 @@ The scripts for setting up Elasticsearch and ingesting your documents can be con
 | `ingest.elasticsearch.index_name`      | `index-created-in-setup-ingestion-repo-sample-config` | The name of the index to ingest into.                                                             |
 | `ingest.elasticsearch.index_text_field`| `body_content_field`                                  | The name of the field in the index used to store document text.                                   |
 | `ingest.elasticsearch.index_embedding_field` | `sparse_embedding` | The name of the field in the index used to store embeddings. 
-| `ingest.elasticsearch.pipeline_name`   | `elser_ingestion`                                     | The name of the pipeline to use for ingestion.                                                    |
+| `ingest.elasticsearch.pipeline_name`   | `elser_ingestion`                                     | The name of the pipeline within Elasticsearch to use for ingestion. Will be created if it doesn't already exist                                                    |
 | `ingest.elasticsearch.embedding_model_id` | `.elser_model_1`                                 | The name of the embedding model to use for ingestion.                                             |
 | `ingest.elasticsearch.embedding_model_text_field` | `text_field`                             | The name of the field the embedding model looks for text in.                                      |
-| `ingest.chunk_size`                    | `256`                                                 | The number of tokens per chunk.                                                                   |
+| `ingest.chunk_size`                    | `512`                                                 | The number of tokens per chunk.                                                                   |
 | `ingest.chunk_overlap`                 | `128`                                                 | The number of tokens to overlap between chunks.                                                   |
-| `query.num_docs_to_retrieve`           | `5`                                                   | The number of documents to retrieve on querying.                                                  |
+| `query.num_docs_to_retrieve`           | `3`                                                   | The number of documents to retrieve on querying.                                                  |
 | `query.llm_path`                       | `configs/llm_config/llms/wml_granite_13b_chat_config.json` | The path to the LLM configuration.                                                               |
 | `query.prompt_template_path`           | `configs/llm_config/prompt_templates/basic_rag_template.txt` | The path to the prompt template. |
 #### Setup and Ingest into Elasticsearch
@@ -133,8 +139,8 @@ Once you have finished making your config file, copy the path to your config and
 
   This script will use the configuration file and does the following in sequence:
 
-  1. Try to activate a trial Elasticsearch license if -s is specified, ignores if not
-  2. Download and deploy the ELSER model from Elastic's servers if -d is specified, ignores if not
+  1. Tries to activate a trial Elasticsearch license if -s is specified, ignores if not
+  2. Downloads and deploys the ELSER model from Elastic's servers if -d is specified, ignores if not
 
 - To ingest your documentation, run the `ingest.py` script:
   ```python
@@ -150,15 +156,36 @@ Once ingestion is complete, your documents are ready to be used for RAG use case
 
 ### Querying Your Data
 
-The ```elastic/query.py``` script provides two main scripts to query your Elasticsearch index: 
+#### Directly within Elasticsearch: 
+
+Within Kibana attached to your Elasticsearch database, go to the **Management->Dev Tools** console, clear out the example and enter this command instead.  
+
+```
+GET <index_name_here>/_search
+{
+    "query":{
+        "text_expansion":{
+            "ml.sparse_embedding":{
+                "model_id":".elser_model_1",
+                "model_text":"Put sample query here"
+            }
+        }
+    }
+}
+```
+
+  Then click the > on top left of pane to send the command:
+
+#### Querying using the `elastic/query.py` script: 
+
+This utility provides a script called `elastic/query.py` to help with querying. This script provides two main functions to query your Elasticsearch index: 
 1. high-level querying using the LlamaIndex framework
 2. low-level querying using the Elasticsearch client
-
-#### High-Level Querying
-The main() function provides a high-level interface for querying the Elasticsearch index through LlamaIndex. It uses a configuration file to set up the query engine, and optionally synthesizes a response using a language model and evaluates the response using specified evaluators.
-
-To use this functionality, run the script with the following command:
-
+  
+The main() function within this script provides a high-level interface for querying the Elasticsearch index through LlamaIndex. It uses the configuration file that you set up above to set up the query engine, optionally synthesizes a response using a language model and evaluates the response using specified evaluators. NOTE: You will need access to watsonx.ai to reach a hosted LLM
+  
+To use this functionality, run the `query.py` script with the following command:
+  
 ```shell
 python elastic/query.py -c "path/to/your/config/file.yaml" -q "your query" -s -e
 ```
@@ -169,7 +196,7 @@ Optional arguments include:
 --use_evaluators or -e: If included, the script will use the LlamaIndex faithfulness and relevancy evaluators to evaluate the response.
 
 #### Low-Level Querying
-The low_level_main() function provides a low-level interface for querying the Elasticsearch index. It directly constructs an Elasticsearch query based on the provided arguments and retrieves the matching texts from the Elasticsearch index.
+The low_level_main() function with `elastic/query.py` provides a low-level interface for querying the Elasticsearch index. It directly constructs an Elasticsearch query based on the provided arguments and retrieves the matching texts from the Elasticsearch index.
 
 ## Sample Data
 
