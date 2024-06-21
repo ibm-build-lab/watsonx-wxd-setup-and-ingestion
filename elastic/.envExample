@@ -1,6 +1,6 @@
-ELASTIC_URL=https://localhost:8080
-ELASTIC_USERNAME=elastic
-ELASTIC_PASSWORD=myPassword
+ELASTIC_URL=<database url>
+ELASTIC_USERNAME=<database username>
+ELASTIC_PASSWORD=<database pwd>
 ELASTIC_CERT_PATH=path/to/elastic.crt
 
 # optional: settings needed to access LLM for search
