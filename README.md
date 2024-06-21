@@ -23,12 +23,10 @@ Currently supported file locations:
   - [Using The Repository](#using-the-repository)
     - [Setting up the environment](#setting-up-the-environment)
     - [Connecting to Elasticsearch](#connecting-to-elasticsearch)
-    - [Sourcing your documents](#sourcing-your-documents)
+    - [Ingesting your documents](#ingesting-your-documents)
       - [Customize the config YAML file](#customize-the-config-yaml-file)
-      - [Setup and Ingest into Elastisearch](#setup-and-ingest-into-elastisearch)
-    - [Querying Your Data](#querying-your-data)
-      - [High-Level Querying](#high-level-querying)
-      - [Low-Level Querying](#low-level-querying)
+      - [Setup and Ingest into Elastisearch](#setup-and-ingest-into-elasticsearch)
+  - [Querying Your Data](#querying-your-data)
   - [Sample Data](#sample-data)
     - [Nvidia Q\&A Text Files](#nvidia-qa-text-files)
     - [IBM Watsonx.ai Sales Documents](#ibm-watsonxai-sales-documents)
@@ -128,6 +126,7 @@ The scripts for setting up Elasticsearch and ingesting your documents can be con
 | `query.num_docs_to_retrieve`           | `3`                                                   | The number of documents to retrieve on querying.                                                  |
 | `query.llm_path`                       | `configs/llm_config/llms/wml_granite_13b_chat_config.json` | The path to the LLM configuration.                                                               |
 | `query.prompt_template_path`           | `configs/llm_config/prompt_templates/basic_rag_template.txt` | The path to the prompt template. |
+
 #### Setup and Ingest into Elasticsearch
 Once you have finished making your config file, copy the path to your config and run the following python script if you need to setup Elasticsearch. 
 
@@ -156,49 +155,32 @@ Once ingestion is complete, your documents are ready to be used for RAG use case
 
 ### Querying Your Data
 
-#### Directly within Elasticsearch: 
-
-Within Kibana attached to your Elasticsearch database, go to the **Management->Dev Tools** console, clear out the example and enter this command instead.  
+Within Kibana attached to your Elasticsearch database, go to the **Management->Dev Tools** console, enter this command below any other commands.  
 
 ```
-GET <index_name_here>/_search
+GET <index_name>/_search
 {
     "query":{
         "text_expansion":{
-            "ml.sparse_embedding":{
-                "model_id":".elser_model_1",
-                "model_text":"Put sample query here"
+            "ml.<embedding field name>":{
+                "model_id":"<model id>",                  
+                "model_text":"<query>"
             }
         }
     }
 }
 ```
 
-  Then click the > on top left of pane to send the command:
 
-#### Querying using the `elastic/query.py` script: 
+Then click the **>** to left of the command to execute it
 
-This utility provides a script called `elastic/query.py` to help with querying. This script provides two main functions to query your Elasticsearch index: 
-1. high-level querying using the LlamaIndex framework
-2. low-level querying using the Elasticsearch client
-  
-The main() function within this script provides a high-level interface for querying the Elasticsearch index through LlamaIndex. It uses the configuration file that you set up above to set up the query engine, optionally synthesizes a response using a language model and evaluates the response using specified evaluators. NOTE: You will need access to watsonx.ai to reach a hosted LLM
-  
-To use this functionality, run the `query.py` script with the following command:
-  
-```shell
-python elastic/query.py -c "path/to/your/config/file.yaml" -q "your query" -s -e
-```
+Note: 
+- **index_name**: name of the index containing your ingested documents with embeddings
+- **embedding field name** `token` is what the script defaults to using for embedding field.  If you chose an alternative, use that here
+- **model id**: Id of the embedding model downloaded and deployed into your Elasticsearch instance. This is located in the Elasticsearch Kibana UI instance under **Analytics->Machine Learning->Trained Models**.
+- **query**: the question being asked to find withing the document index
 
-Optional arguments include:
-
---synthesize_response or -s: If included, the script will synthesize a response using a language model in the config file
---use_evaluators or -e: If included, the script will use the LlamaIndex faithfulness and relevancy evaluators to evaluate the response.
-
-#### Low-Level Querying
-The low_level_main() function with `elastic/query.py` provides a low-level interface for querying the Elasticsearch index. It directly constructs an Elasticsearch query based on the provided arguments and retrieves the matching texts from the Elasticsearch index.
-
-## Sample Data
+- ## Sample Data
 
 ### Nvidia Q&A Text Files
 To test this repository for basic functionality, a CSV file in ```data/nvidia``` called ```data/nvidia/NvidiaDocumentationQandApairs.csv``` has been provided. This CSV file contains a set of questions and answers related to NVIDIA. If you would like to test the repository with this file, run the following:
@@ -214,13 +196,6 @@ To test this repository for basic functionality, a CSV file in ```data/nvidia```
     python3 elastic/ingest.py -c "elastic/configs/setup_and_ingest_configs/sample_config.yaml"
     ```
 
-3. Test the ingested documents by running 
-
-   ```shell
-   elastic/query.py -q "your query in quotes" -c "elastic/configs/setup_and_ingest_configs/sample_config.yaml"
-   ```
-
-
 ### IBM Watsonx.ai Sales Documents
 To test the repository against a more robust set of documents, here is a link to a [box folder](https://ibm.box.com/s/5lxisye5k379lwn0puisbp1d5g9461h9) that contains a few sales-oriented documents regarding Watsonx.ai from Seismic. This set of documents contains PDF, Docx, and Pptx. With the exception of "watsonx.ai Client Presentation.pptx", the repository is able to handle all the documents in the folder. To use this document set, follow the steps below:
 1. Follow the link to the box folder and copy the folder contents to a local directory
@@ -230,11 +205,5 @@ To test the repository against a more robust set of documents, here is a link to
     ```shell
     python3 elastic/ingest.py -c "elastic/configs/setup_and_ingest_configs/ibm_config.yaml"
     ```
-4. Test the ingested documents by running ```elastic/query.py```. Since a set of questions has not been curated for this document set yet, you can ask a specific query using the ```-q <YOUR_QUERY>``` argument while running the Python script. 
-   ```shell
-   python3 elastic/query.py -c "elastic/configs/setup_and_ingest_configs/ibm_config.yaml" -q "your query in quotes"
-   ```
-5. (Optional) You can also test conversational search using the [BAM api](https://bam.res.ibm.com/) using the retrieved documents. To do so, create a ```.env``` file in the root folder following the ```.envExample``` file and put your personal BAM API key in the BAM_APIKEY field. To test conversational search after querying, append the ```-e``` argument when running ```query.py```.
-    ```shell
-    python3 elastic/eval/query.py -c "elastic/configs/setup_and_ingest_configs/ibm_config.yaml" -q "your query in quotes" -e 
-    ```
+
+
