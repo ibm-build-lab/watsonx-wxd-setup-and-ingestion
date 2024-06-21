@@ -1,4 +1,4 @@
-ELASTIC_URL=<database url>
+ELASTIC_URL=<database url>:<database port>
 ELASTIC_USERNAME=<database username>
 ELASTIC_PASSWORD=<database pwd>
 ELASTIC_CERT_PATH=path/to/elastic.crt
