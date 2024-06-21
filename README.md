@@ -180,7 +180,7 @@ Note:
 - **model id**: Id of the embedding model downloaded and deployed into your Elasticsearch instance. This is located in the Elasticsearch Kibana UI instance under **Analytics->Machine Learning->Trained Models**.
 - **query**: the question being asked to find withing the document index
 
-- ## Sample Data
+## Sample Data
 
 ### Nvidia Q&A Text Files
 To test this repository for basic functionality, a CSV file in ```data/nvidia``` called ```data/nvidia/NvidiaDocumentationQandApairs.csv``` has been provided. This CSV file contains a set of questions and answers related to NVIDIA. If you would like to test the repository with this file, run the following:
