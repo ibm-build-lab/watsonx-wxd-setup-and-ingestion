@@ -119,13 +119,13 @@ The scripts for setting up Elasticsearch and ingesting your documents can be con
 | `ingest.elasticsearch.index_text_field`| `body_content_field`                                  | The name of the field in the index used to store document text.                                   |
 | `ingest.elasticsearch.index_embedding_field` | `sparse_embedding` | The name of the field in the index used to store embeddings. 
 | `ingest.elasticsearch.pipeline_name`   | `elser_ingestion`                                     | The name of the pipeline within Elasticsearch to use for ingestion. Will be created if it doesn't already exist                                                    |
-| `ingest.elasticsearch.embedding_model_id` | `.elser_model_1`                                 | The name of the embedding model to use for ingestion.                                             |
+| `ingest.elasticsearch.embedding_model_id` | `.elser_model_2`                                 | The name of the embedding model to use for ingestion.                                             |
 | `ingest.elasticsearch.embedding_model_text_field` | `text_field`                             | The name of the field the embedding model looks for text in.                                      |
 | `ingest.chunk_size`                    | `512`                                                 | The number of tokens per chunk.                                                                   |
 | `ingest.chunk_overlap`                 | `128`                                                 | The number of tokens to overlap between chunks.                                                   |
-| `query.num_docs_to_retrieve`           | `3`                                                   | The number of documents to retrieve on querying.                                                  |
-| `query.llm_path`                       | `configs/llm_config/llms/wml_granite_13b_chat_config.json` | The path to the LLM configuration.                                                               |
-| `query.prompt_template_path`           | `configs/llm_config/prompt_templates/basic_rag_template.txt` | The path to the prompt template. |
+| `query.num_docs_to_retrieve`           | `3`                                                   | The number of documents to retrieve on querying. NOTE: only used by query.py, which this repo is not supporting currently                                               |
+| `query.llm_path`                       | `configs/llm_config/llms/wml_granite_13b_chat_config.json` | The path to the LLM configuration. NOTE: only used by query.py, which this repo is not supporting currently                                                            |
+| `query.prompt_template_path`           | `configs/llm_config/prompt_templates/basic_rag_template.txt` | The path to the prompt template. NOTE: only used by query.py, which this repo is not supporting currently    |
 
 #### Setup and Ingest into Elasticsearch
 Once you have finished making your config file, copy the path to your config and run the following python script if you need to setup Elasticsearch. 
@@ -139,7 +139,7 @@ Once you have finished making your config file, copy the path to your config and
   This script will use the configuration file and does the following in sequence:
 
   1. Tries to activate a trial Elasticsearch license if -s is specified, ignores if not
-  2. Downloads and deploys the ELSER model from Elastic's servers if -d is specified, ignores if not
+  2. Downloads and deploys the model defined in config as `embedding_model_id` from Elastic's servers if -d is specified, ignores if not
 
 - To ingest your documentation, run the `ingest.py` script:
   ```python
