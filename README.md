@@ -70,13 +70,13 @@ To authenticate to Elasticsearch, you will need:
 
 If you have a Databases for Elasticsearch configured on IBM Cloud, you can get these values by going to your resource list in IBM Cloud and selecting Elasticsearch under your database resources. 
 
-1. In the overview tab of your Elasticsearch resource, scroll to the bottom and select the https endpoint. Here, you will find your hostname, port, and SSL certificate.
+1. In the overview tab of your Elasticsearch resource, scroll to the bottom and select the https endpoint. Here, you will find your **hostname**, **port**, and **SSL certificate**.
 
     <img src="images/get_cert_and_route.png" alt="Location of hostname and certificate" width="1800"/>
 
-    Note the hostname and the port, and save a copy of the SSL certificate to a directory in this repostiory
+    Note the **hostname** and the **port**, and save a copy of the **SSL certificate** to a directory in this repostiory
 
-1. Next, go top the service credentials tab and expand the service credentials. Save the username and password.
+1. Next, go top the service credentials tab and expand the service credentials. Save the **username** and **password**.
 
     <img src="images/get_user_and_pass.png" alt="Location of username and password" width="1800"/>
 
