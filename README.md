@@ -76,7 +76,7 @@ If you have a Databases for Elasticsearch configured on IBM Cloud, you can get t
 
     Note the **hostname** and the **port**, and save a copy of the **SSL certificate** to a directory in this repostiory
 
-1. Next, go top the service credentials tab and expand the service credentials. Save the **username** and **password**.
+1. Next, go top the service **credentials** tab and expand the **service credentials**. Note the **username** and **password**.
 
     <img src="images/get_user_and_pass.png" alt="Location of username and password" width="1800"/>
 
