@@ -1,6 +1,6 @@
 # Setting Up and Ingesting Files into Elasticsearch
 
-This repository contains Python 3.10 code assets designed to configure an instance of Elasticsearch and ingest files into an index in Elasticsearch. The stored files are embedded using Elastic's ELSER model and can be used for use-cases such as Retrieval Augmented Generation.
+This repository contains Python 3.10 code assets designed to configure an instance of **Elasticsearch** and ingest files into an index in **Elasticsearch**. The stored files are embedded using Elastic's ELSER model and can be used for use-cases such as Retrieval Augmented Generation.
 
 Currently supported file types:
 | File Type | Loader |
@@ -33,7 +33,7 @@ Currently supported file locations:
 
 ## Prerequisites
 
-This repository assumes that you have an instance of Databases for Elasticsearch Platinum edition deployed on IBM Cloud. The Platinum edition is required to use the ELSER model in Elasticsearch, which is leveraged for semantic search. If this is not available, you can also test this repository using Elasticsearch deployed on an Openshift cluster or locally. For guidance on deploying Elasticsearch locally, refer to the [official Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/run-elasticsearch-locally.html), or use the Dockerfile provided in the `container_setup` directory.
+This repository assumes that you have an instance of **Databases for Elasticsearch** Platinum edition deployed on **IBM Cloud**. To deploy this service on **IBM Cloud**, see [Setting up Elasticsearch with Kibana and Enterprise Search](https://cloud.ibm.com/docs/databases-for-elasticsearch?topic=databases-for-elasticsearch-tutorial-elasticsearch-enterprise-search-tutorial). The Platinum edition is required to use the ELSER model in **Elasticsearch**, which is leveraged for semantic search. If this is not available, you can also test this repository using **Elasticsearch** deployed on an Openshift cluster or locally. For guidance on deploying Elasticsearch locally, refer to the [official Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/run-elasticsearch-locally.html), or use the Dockerfile provided in the `container_setup` directory.
 
 ## Using The Repository
 
