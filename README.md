@@ -100,7 +100,7 @@ The next step is to source your documents that you wish to ingest into Elasticse
 
 - If you wish to ingest documents through a local directory, save all the documents to a directory and note the path of the directory. All documents within the directory path will be ingested.
 
-- If you wish to ingest documents through Cloud Object Storage, load the files documents into a bucket in your configured instance of Cloud Object Storage and save the name of the bucket. For details on setting up a Cloud Object Storage bucket, refer to this documentation [README in the COS folder](COS/README.md). 
+- If you wish to ingest documents through Cloud Object Storage, load the files documents into a bucket in your configured instance of Cloud Object Storage and save the name of the bucket. For details on setting up a Cloud Object Storage bucket, refer to this documentation [Getting started with Cloud Object Storage](https://cloud.ibm.com/docs/cloud-object-storage/basics/archive.html?topic=cloud-object-storage-getting-started-cloud-object-storage). 
 
 A small collection of sample documents is provided below in the [sample data section](#sample-data).
 
@@ -109,21 +109,21 @@ A small collection of sample documents is provided below in the [sample data sec
 The scripts for setting up Elasticsearch and ingesting your documents can be configured via a YAML config file. A sample config is provided in the `configs` folder of the repository. Using the `sample_config.yaml` file, create a new config file and populate the values as described below
 
 
-| Field                                  | Default Value                                         | Description                                                                                       |
-|----------------------------------------|-------------------------------------------------------|---------------------------------------------------------------------------------------------------|
-| `ingest.file_store.type`               | `local`                                               | The type of file store. Can be `cos` (Cloud Object Storage) or `local`.                           |
-| `ingest.file_store.location`           | `data/nvidia/answers`                                 | If `cos`, the name of the bucket. If `local`, the directory path.                                 |
-| `ingest.file_store.service_credentials_path` | `null`                                      | The path to the service credentials if `cos` is the type of file store.                                                              |
-| `ingest.file_store.num_files_to_ingest` | `500`                                                | The number of files to ingest.                                                                    |
-| `ingest.elasticsearch.index_name`      | `index-created-in-setup-ingestion-repo-sample-config` | The name of the index to ingest into.                                                             |
-| `ingest.elasticsearch.index_text_field`| `body_content_field`                                  | The name of the field in the index used to store document text.                                   |
+| Field                                  | Default Value   | Description                                                                                       |
+|----------------------------------------|--------------------------|---------------------------------------------------------------------------------------------------|
+| `ingest.file_store.type`               | `local`                  | The type of file store. Can be `cos` (Cloud Object Storage) or `local`.                           |
+| `ingest.file_store.location`           | `data/nvidia/answers`    | If `cos`, the name of the bucket. If `local`, the directory path.                                 |
+| `ingest.file_store.service_credentials_path` | `null`              | The path to the service credentials if `cos` is the type of file store.                                                              |
+| `ingest.file_store.num_files_to_ingest` | `500`                   | The number of files to ingest.                                                                    |
+| `ingest.elasticsearch.index_name`      | `new-doc-index` | The name of the index to ingest into.                                                             |
+| `ingest.elasticsearch.index_text_field`| `body_content_field`     | The name of the field in the index used to store document text.                                   |
 | `ingest.elasticsearch.index_embedding_field` | `sparse_embedding` | The name of the field in the index used to store embeddings. 
-| `ingest.elasticsearch.pipeline_name`   | `elser_ingestion`                                     | The name of the pipeline within Elasticsearch to use for ingestion. Will be created if it doesn't already exist                                                    |
-| `ingest.elasticsearch.embedding_model_id` | `.elser_model_2`                                 | The name of the embedding model to use for ingestion.                                             |
-| `ingest.elasticsearch.embedding_model_text_field` | `text_field`                             | The name of the field the embedding model looks for text in.                                      |
-| `ingest.chunk_size`                    | `512`                                                 | The number of tokens per chunk.                                                                   |
-| `ingest.chunk_overlap`                 | `128`                                                 | The number of tokens to overlap between chunks.                                                   |
-| `query.num_docs_to_retrieve`           | `3`                                                   | The number of documents to retrieve on querying. NOTE: only used by query.py, which this repo is not supporting currently                                               |
+| `ingest.elasticsearch.pipeline_name`   | `elser_ingestion`          | The name of the pipeline within Elasticsearch to use for ingestion. Will be created if it doesn't already exist     |
+| `ingest.elasticsearch.embedding_model_id` | `.elser_model_2`       | The name of the embedding model to use for ingestion.                                             |
+| `ingest.elasticsearch.embedding_model_text_field` | `text_field`   | The name of the field the embedding model looks for text in.                                      |
+| `ingest.chunk_size`                    | `512`                     | The number of tokens per chunk.                                                                   |
+| `ingest.chunk_overlap`                 | `128`                      | The number of tokens to overlap between chunks.                                                   |
+| `query.num_docs_to_retrieve`           | `3`                       | The number of documents to retrieve on querying. NOTE: only used by query.py, which this repo is not supporting currently                |
 | `query.llm_path`                       | `configs/llm_config/llms/wml_granite_13b_chat_config.json` | The path to the LLM configuration. NOTE: only used by query.py, which this repo is not supporting currently                                                            |
 | `query.prompt_template_path`           | `configs/llm_config/prompt_templates/basic_rag_template.txt` | The path to the prompt template. NOTE: only used by query.py, which this repo is not supporting currently    |
 
