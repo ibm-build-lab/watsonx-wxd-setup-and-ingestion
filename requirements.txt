@@ -1,6 +1,6 @@
 python-dotenv
 # Llamaindex
-llama-index==0.10.9
+llama-index==0.10.13
 llama-index-vector-stores-elasticsearch
 llama-index-embeddings-elasticsearch
 llama-index-llms-watsonx
