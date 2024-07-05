@@ -21,7 +21,7 @@ class ElserElasticsearchStore(ElasticsearchStore):
         description="Name of the Elasticsearch pipeline to use for inference",
     )
     model_id: str = Field(
-        default=".elser_model_1",
+        default=".elser_model_2_linux-x86_64",
         description="ID of the ELSER model to use for inference",
     )
     model_text_field: str = Field(
@@ -35,7 +35,7 @@ class ElserElasticsearchStore(ElasticsearchStore):
         model_text_field = kwargs.pop("model_text_field", None)
         super().__init__(*args, **kwargs)
         self.pipeline_name = pipeline_name
-        self.model_id = model_id or ".elser_model_1"
+        self.model_id = model_id or ".elser_model_2_linux-x86_64"
         self.model_text_field = model_text_field or "body_content_field"
 
     async def async_add(

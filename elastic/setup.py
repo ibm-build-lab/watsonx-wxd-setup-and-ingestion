@@ -207,7 +207,7 @@ def create_index_with_elser_ingestion_pipeline(
     pipeline_name: str = "elser_ingestion_pipeline",
     index_text_field: str = "text",
     index_embedding_field: str = "sparse_embedding",
-    embedding_model_id: str = ".elser_model_1",
+    embedding_model_id: str = ".elser_model_2_linux-x86_64",
 ) -> Tuple[elastic_transport.ObjectApiResponse, elastic_transport.ObjectApiResponse]:
     """
     Creates an elasticsearch.Elasticsearch index that embeds docuemnt text into an embedding field
@@ -223,7 +223,7 @@ def create_index_with_elser_ingestion_pipeline(
         index_embedding_field (str, optional): The name of the field in the index to store the document embeddings.
             Defaults to "sparse_embedding".
         embedding_model_id (str, optional): The ID of the model to use for text embedding.
-            Defaults to ELSER i.e. "elser_model_1".
+            Defaults to ELSER i.e. "elser_model_2_linux-x86_64".
 
     Returns:
         tuple: A tuple containing the index creation response and the pipeline creation response.

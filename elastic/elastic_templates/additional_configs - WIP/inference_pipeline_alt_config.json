@@ -13,7 +13,7 @@
     },
     {
       "inference": {
-        "model_id": ".elser_model_1",
+        "model_id": ".elser_model_2_linux-x86_64",
         "field_map": { 
           "text": "text_field"
         },

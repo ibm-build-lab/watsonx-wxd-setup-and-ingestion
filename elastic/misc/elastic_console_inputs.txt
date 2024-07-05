@@ -3,14 +3,14 @@ sequentially on the dev console in Kibana is functionally equivalent to running 
 
 POST /_license/start_trial?acknowledge=true
 
-PUT _ml/trained_models/.elser_model_1
+PUT _ml/trained_models/.elser_model_2_linux-x86_64
 {
   "input": {
 	"field_names": ["text_field"]
   }
 }
 
-POST _ml/trained_models/.elser_model_1/deployment/_start?deployment_id=for_search
+POST _ml/trained_models/.elser_model_2_linux-x86_64/deployment/_start?deployment_id=for_search
 
 PUT wxd-rag
 {
@@ -38,7 +38,7 @@ PUT _ingest/pipeline/elser_inference
         "field_map": {
           "text": "text_field"
         },
-        "model_id": ".elser_model_1",
+        "model_id": ".elser_model_2_linux-x86_64",
         "on_failure": [
           {
             "append": {
