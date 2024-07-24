@@ -112,7 +112,7 @@ The scripts for setting up Elasticsearch and ingesting your documents can be con
 | Field                                  | Default Value   | Description                                                                                       |
 |----------------------------------------|--------------------------|---------------------------------------------------------------------------------------------------|
 | `ingest.file_store.type`               | `local`                  | The type of file store. Can be `cos` (Cloud Object Storage) or `local`.                           |
-| `ingest.file_store.location`           | `data/nvidia/answers`    | If `cos`, the name of the bucket. If `local`, the directory path.                                 |
+| `ingest.file_store.location`           | `data/nvidia`    | If `cos`, the name of the bucket. If `local`, a directory path relative to current directory.                                 |
 | `ingest.file_store.service_credentials_path` | `null`              | The path to the service credentials if `cos` is the type of file store.                                                              |
 | `ingest.file_store.num_files_to_ingest` | `500`                   | The number of files to ingest.                                                                    |
 | `ingest.elasticsearch.index_name`      | `new-doc-index` | The name of the index to ingest into.                                                             |
