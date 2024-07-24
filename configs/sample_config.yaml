@@ -2,7 +2,7 @@
 ingest: 
   file_store:  
     type: "local" # "cos" or "local"
-    location: "data/nvidia/answers" # if cos, the name of the bucket. if local, the directory path
+    location: "data/nvidia" # if cos, the name of the bucket. if local, the directory path
     service_credentials_path: null
     num_files_to_ingest: 500
   elasticsearch:
