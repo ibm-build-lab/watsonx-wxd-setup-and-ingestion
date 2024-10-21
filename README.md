@@ -1,6 +1,8 @@
 # Setting Up and Ingesting Files into Elasticsearch
 
-This repository contains Python 3.10 code assets designed to configure an instance of **Elasticsearch** and ingest files into an index in **Elasticsearch**. The stored files are embedded using Elastic's ELSER model and can be used for use-cases such as Retrieval Augmented Generation.
+This repository contains **Python 3.10** code assets designed to configure an instance of **Elasticsearch** and ingest files into an index in **Elasticsearch**. The stored files are embedded using Elastic's ELSER model and can be used for use-cases such as Retrieval Augmented Generation.
+
+**NOTE:** these scripts may not work with versions beyond 3.10
 
 Currently supported file types:
 | File Type | Loader |
