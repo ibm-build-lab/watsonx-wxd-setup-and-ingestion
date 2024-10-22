@@ -2,7 +2,7 @@
 
 This repository contains **Python 3.10** code assets designed to configure an instance of **Elasticsearch** and ingest files into an index in **Elasticsearch**. The stored files are embedded using Elastic's ELSER model and can be used for use-cases such as Retrieval Augmented Generation.
 
-**NOTE:** these scripts may not work with versions beyond 3.10
+**NOTE:** these scripts may not work with versions beyond python 3.10
 
 Currently supported file types:
 | File Type | Loader |
@@ -45,15 +45,11 @@ To start using the repository, first clone the repository into a local directory
 
 ``` shell
 python3 -m venv .venv
-```
-```shell
 source .venv/bin/activate
-```
-```shell
 pip install -r requirements.txt
 ```
 
-When running code from the repository, make sure that the environment you have created is active
+When running code from the repository, make sure that the environment you have created is active. You may need to rerun the `source .venv/bin/activate` command.
 
 ### Connecting to Elasticsearch
 
@@ -129,7 +125,7 @@ The scripts for setting up Elasticsearch and ingesting your documents can be con
 | `ingest.elasticsearch.index_text_field`| `body_content_field`     | The name of the field in the index used to store document text.                                   |
 | `ingest.elasticsearch.index_embedding_field` | `sparse_embedding` | The name of the field in the index used to store embeddings. 
 | `ingest.elasticsearch.pipeline_name`   | `elser_ingestion`          | The name of the pipeline within Elasticsearch to use for ingestion. Will be created if it doesn't already exist     |
-| `ingest.elasticsearch.embedding_model_id` | `.elser_model_2`       | The name of the embedding model to use for ingestion.                                             |
+| `ingest.elasticsearch.embedding_model_id` | `.elser_model_2_linux-x86_64`       | The name of the embedding model to use for ingestion.                                             |
 | `ingest.elasticsearch.embedding_model_text_field` | `text_field`   | The name of the field the embedding model looks for text in.                                      |
 | `ingest.chunk_size`                    | `512`                     | The number of tokens per chunk.                                                                   |
 | `ingest.chunk_overlap`                 | `128`                      | The number of tokens to overlap between chunks.                                                   |
@@ -148,7 +144,7 @@ Once you have finished making your config file, copy the path to your config and
 
   This script will use the configuration file and does the following in sequence:
 
-  1. Tries to activate a trial Elasticsearch license if -s is specified, ignores if not
+  1. Attempts to activate a trial Elasticsearch license if -s is specified, ignores if not
   2. Downloads and deploys the model defined in config as `embedding_model_id` from Elastic's servers if -d is specified, ignores if not
 
 - To ingest your documentation, run the `ingest.py` script:
