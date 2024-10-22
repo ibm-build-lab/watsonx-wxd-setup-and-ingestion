@@ -63,7 +63,7 @@ To authenticate to Elasticsearch, you will need:
 
 - username
 - password
-- hostname
+- database URL
 - port
 - SSL certificate
 
