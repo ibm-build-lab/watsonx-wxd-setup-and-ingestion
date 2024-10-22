@@ -85,13 +85,21 @@ If you have a Databases for Elasticsearch configured on IBM Cloud, you can get t
     </details>
 
 
-Once you have these credentials, make a .env file containing these credentials. To do so, go to the ```elastic``` folder inside the repository and copy the contents of the ```.envExample``` file into a new file called ```.env```. To populate this file:
+Once you have these credentials, go into the ```elastic``` folder inside the repository and copy the contents of the ```.envExample``` file into a new file called ```.env```. To populate this file:
 
 - Replace the value after ```ELASTIC_URL``` with ```https://<hostname>:<port>``` 
 - Replace the value after ```ELASTIC_USERNAME``` and ```ELASTIC_PASSWORD``` with the username and password for Elasticsearch
-- Copy the relative path of the SSL certificate you copied into the repository, and replace the value after ```ELASTIC_CERT_PATH``` with the relative path
+- Replace the value after ```ELASTIC_CERT_PATH``` with the relative path (from this top-level directory) of the SSL certificate you copied into the repository.  
 
-(Optional) To verify whether you are able to connect to Elasticsearch, try to instantiate an Elasticsearch Python client and test its connection. The command below should run without error if the values in the .env file are inputted correctly
+An example `.env` file would look like this
+```
+ELASTIC_URL="https://****************************.databases.appdomain.cloud:31898"
+ELASTIC_USERNAME="admin"
+ELASTIC_PASSWORD="******************"
+ELASTIC_CERT_PATH="./elastic/ES_Cert/cert_file"
+```
+
+(Optional) Verify the connection to Elasticsearch. Run the following command:
 
 ``` shell
 python3 elastic/utils.py
