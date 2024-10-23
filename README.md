@@ -17,22 +17,6 @@ Currently supported file locations:
 1. Local directories
 1. Cloud Object Storage
 
-## Table of Contents
-
-- [Setting Up and Ingesting Files into Elasticsearch](#setting-up-and-ingesting-files-into-elasticsearch)
-  - [Table of Contents](#table-of-contents)
-  - [Prerequisites](#prerequisites)
-  - [Using The Repository](#using-the-repository)
-    - [Setting up the environment](#setting-up-the-environment)
-    - [Connecting to Elasticsearch](#connecting-to-elasticsearch)
-    - [Ingesting your documents](#ingesting-your-documents)
-      - [Customize the config YAML file](#customize-the-config-yaml-file)
-      - [Setup and Ingest into Elastisearch](#setup-and-ingest-into-elasticsearch)
-  - [Querying Your Data](#querying-your-data)
-  - [Sample Data](#sample-data)
-    - [Nvidia Q\&A Text Files](#nvidia-qa-text-files)
-    - [IBM Watsonx.ai Sales Documents](#ibm-watsonxai-sales-documents)
-
 ## Prerequisites
 
 This repository assumes that you have an instance of **Databases for Elasticsearch** Platinum edition deployed on **IBM Cloud**. To deploy this service on **IBM Cloud**, see [Setting up Elasticsearch with Kibana and Enterprise Search](https://cloud.ibm.com/docs/databases-for-elasticsearch?topic=databases-for-elasticsearch-tutorial-elasticsearch-enterprise-search-tutorial). The Platinum edition is required to use the ELSER model in **Elasticsearch**, which is leveraged for semantic search. If this is not available, you can also test this repository using **Elasticsearch** deployed on an Openshift cluster or locally. For guidance on deploying Elasticsearch locally, refer to the [official Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/run-elasticsearch-locally.html), or use the Dockerfile provided in the `container_setup` directory.
@@ -78,7 +62,7 @@ If you have a Databases for Elasticsearch configured on IBM Cloud, you can get t
 
     <img src="images/get_user_and_pass.png" alt="Location of username and password" width="1800"/>
 
-    </details>
+</details>
 
 
 Once you have these credentials, go into the ```elastic``` folder inside the repository and copy the contents of the ```.envExample``` file into a new file called ```.env```. To populate this file:
@@ -106,7 +90,7 @@ The next step is to source your documents that you wish to ingest into Elasticse
 
 - If you wish to ingest documents through a local directory, save all the documents to a directory and note the path of the directory. All documents within the directory path will be ingested.
 
-- If you wish to ingest documents through Cloud Object Storage, load the files documents into a bucket in your configured instance of Cloud Object Storage and save the name of the bucket. For details on setting up a Cloud Object Storage bucket, refer to this documentation [Getting started with Cloud Object Storage](https://cloud.ibm.com/docs/cloud-object-storage/basics/archive.html?topic=cloud-object-storage-getting-started-cloud-object-storage). 
+- If you wish to ingest documents through Cloud Object Storage, load the files documents into a bucket in your configured instance of Cloud Object Storage and save the name of the bucket. For details on setting up a Cloud Object Storage bucket, refer to this documentation [Getting started with Cloud Object Storage](https://cloud.ibm.com/docs/cloud-object-storage/basics/archive.html?topic=cloud-object-storage-getting-started-cloud-object-storage). You will need to create credentials to your Cloud Object Storage instance and copy them into a file as a JSON object. See an example in `configs/filestore_creds/cos_service_credentials.json`
 
 A small collection of sample documents is provided below in the [sample data section](#sample-data).
 
@@ -129,25 +113,9 @@ The scripts for setting up Elasticsearch and ingesting your documents can be con
 | `ingest.elasticsearch.embedding_model_text_field` | `text_field`   | The name of the field the embedding model looks for text in.                                      |
 | `ingest.chunk_size`                    | `512`                     | The number of tokens per chunk.                                                                   |
 | `ingest.chunk_overlap`                 | `128`                      | The number of tokens to overlap between chunks.                                                   |
-| `query.num_docs_to_retrieve`           | `3`                       | The number of documents to retrieve on querying. NOTE: only used by query.py, which this repo is not supporting currently                |
-| `query.llm_path`                       | `configs/llm_config/llms/wml_granite_13b_chat_config.json` | The path to the LLM configuration. NOTE: only used by query.py, which this repo is not supporting currently                                                            |
-| `query.prompt_template_path`           | `configs/llm_config/prompt_templates/basic_rag_template.txt` | The path to the prompt template. NOTE: only used by query.py, which this repo is not supporting currently    |
 
-#### Setup and Ingest into Elasticsearch
-Once you have finished making your config file, copy the path to your config and run the following python script if you need to setup Elasticsearch. 
+Once you have finished making your config file, copy the path to your config and run the `ingest.py` script
 
-- Run the `setup.py` script to setup Elasticsearch. Skip this step if you already have an Elasticsearch database configured:
-
-  ```shell
-  python3 elastic/setup.py [-s -d ] -c "path/to/your/config/file.yaml"
-  ```
-
-  This script will use the configuration file and does the following in sequence:
-
-  1. Attempts to activate a trial Elasticsearch license if -s is specified, ignores if not
-  2. Downloads and deploys the model defined in config as `embedding_model_id` from Elastic's servers if -d is specified, ignores if not
-
-- To ingest your documentation, run the `ingest.py` script:
   ```python
   python3 elastic/ingest.py -c "path/to/your/config/file.yaml"
   ```

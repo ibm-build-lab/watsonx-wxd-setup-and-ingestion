@@ -9,7 +9,6 @@ import elasticsearch
 
 logger = logging.getLogger(__name__)
 
-
 def _get_elasticsearch_credentials_from_env(
     dotenv_path: str | Path = "elastic/.env",
 ) -> tuple[str, str, str, str]:
@@ -36,7 +35,6 @@ def _get_elasticsearch_credentials_from_env(
         )
     return url, username, password, cert_path
 
-
 def get_elasticsearch_client_from_env(**kwargs) -> elasticsearch.Elasticsearch:
     """
     Get an Elasticsearch client using environment variables.
@@ -56,7 +54,6 @@ def get_elasticsearch_client_from_env(**kwargs) -> elasticsearch.Elasticsearch:
     )
     client.info()  # Check if client is working
     return client
-
 
 def get_async_elasticsearch_client_from_env(
     **kwargs,
@@ -78,7 +75,6 @@ def get_async_elasticsearch_client_from_env(
     return elasticsearch.AsyncElasticsearch(
         url, ca_certs=cert_path, basic_auth=(username, password), **kwargs
     )
-
 
 def create_api_key(
     client: elasticsearch.Elasticsearch, name: str = "my_api_key"
@@ -105,7 +101,6 @@ def create_api_key(
     response = client.security.create_api_key(body=body)
     return response
 
-
 def replace_placeholders_in_JSON_template(JSON_template: dict, **kwargs: str) -> dict:
     """
     Replaces placeholders in a JSON template with provided values.
@@ -127,7 +122,6 @@ def replace_placeholders_in_JSON_template(JSON_template: dict, **kwargs: str) ->
         logger.warning(f"Remaining placeholders found: {remaining_placeholders}")
 
     return json.loads(template_str)
-
 
 if __name__ == "__main__":
     client = get_elasticsearch_client_from_env()

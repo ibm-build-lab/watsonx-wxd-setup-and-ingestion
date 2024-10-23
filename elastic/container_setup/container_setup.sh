@@ -38,8 +38,8 @@ docker run \
 --env "secret_management.encryption_keys=[c34d38b3a14956121ff2170e5030b471551370178f43e5626eec58b04a30fae2]" \
 --env "allow_es_settings_modification=true" \
 --env "elasticsearch.host=https://172.18.0.2:9200" \
---env "elasticsearch.username=elastic" \
---env "elasticsearch.password=oF312a-NLFtfc_ZRH6Vo" \
+--env "elasticsearch.username=admin" \
+--env "elasticsearch.password=*************" \
 --env "elasticsearch.ssl.enabled=true" \
 --env "elasticsearch.ssl.certificate_authority=/usr/share/enterprise-search/es-config/certs/http_ca.crt" \
 --env "kibana.external_url=http://0.0.0.0:5601" \

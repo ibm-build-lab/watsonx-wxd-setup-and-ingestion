@@ -127,130 +127,130 @@ def deploy_model(
         return deployment_id
 
 
-def create_index(
-    client: elasticsearch.Elasticsearch,
-    index_name: str,
-    index_settings: dict,
-    delete_existing: bool = True,
-) -> elastic_transport.ObjectApiResponse:
-    """
-    Create an index in elasticsearch.Elasticsearch.
+# def create_index(
+#     client: elasticsearch.Elasticsearch,
+#     index_name: str,
+#     index_settings: dict,
+#     delete_existing: bool = True,
+# ) -> elastic_transport.ObjectApiResponse:
+#     """
+#     Create an index in elasticsearch.Elasticsearch.
 
-    Args:
-        client (elasticsearch.Elasticsearch): The elasticsearch.Elasticsearch client.
-        index_name (str): The name of the index to be created.
-        index_settings (dict): The settings for the index.
-        delete_existing (bool, optional): Whether to delete the existing index with the same name. Defaults to True.
+#     Args:
+#         client (elasticsearch.Elasticsearch): The elasticsearch.Elasticsearch client.
+#         index_name (str): The name of the index to be created.
+#         index_settings (dict): The settings for the index.
+#         delete_existing (bool, optional): Whether to delete the existing index with the same name. Defaults to True.
 
-    Returns:
-        elastic_transport.ObjectApiResponse: The response from elasticsearch.Elasticsearch.
+#     Returns:
+#         elastic_transport.ObjectApiResponse: The response from elasticsearch.Elasticsearch.
 
-    """
-    logger.info("Creating the index...")
-    index_already_exists = client.indices.exists(index=index_name).body
-    if delete_existing and index_already_exists:
-        client.indices.delete(index=index_name)
-    response = client.indices.create(index=index_name, body=index_settings)
-    return response
-
-
-def get_model_text_field(client: elasticsearch.Elasticsearch, model_id: str) -> str:
-    """
-    Retrieves the text field name from a trained model configuration.
-
-    Args:
-        client (elasticsearch.Elasticsearch): The elasticsearch.Elasticsearch client.
-        model_id (str): The ID of the trained model.
-
-    Returns:
-        str: The name of the text field.
-    """
-    response = client.ml.get_trained_models(model_id=model_id)
-    return response.body["trained_model_configs"][0]["input"]["field_names"][0]
+#     """
+#     logger.info("Creating the index...")
+#     index_already_exists = client.indices.exists(index=index_name).body
+#     if delete_existing and index_already_exists:
+#         client.indices.delete(index=index_name)
+#     response = client.indices.create(index=index_name, body=index_settings)
+#     return response
 
 
-def create_index_with_default_pipeline(
-    client: elasticsearch.Elasticsearch,
-    index_name: str,
-    index_config: dict,
-    pipeline_config: dict,
-    pipeline_name: str = "default_pipeline",
-) -> Tuple[elastic_transport.ObjectApiResponse, elastic_transport.ObjectApiResponse]:
-    """
-    Creates an elasticsearch.Elasticsearch index with a default ingestion pipeline.
+# def get_model_text_field(client: elasticsearch.Elasticsearch, model_id: str) -> str:
+#     """
+#     Retrieves the text field name from a trained model configuration.
 
-    Args:
-        client (elasticsearch.Elasticsearch): The elasticsearch.Elasticsearch client.
-        index_name (str): The name of the index to be created.
-        index_config (dict): The configuration settings for the index.
-        pipeline_config (dict): The configuration settings for the ingestion pipeline.
-        pipeline_name (str, optional): The name of the ingestion pipeline. Defaults to "default_pipeline".
+#     Args:
+#         client (elasticsearch.Elasticsearch): The elasticsearch.Elasticsearch client.
+#         model_id (str): The ID of the trained model.
 
-    Returns:
-        tuple: A tuple containing the index creation response and the pipeline creation response.
-    """
-    pipeline_response = client.ingest.put_pipeline(
-        id=pipeline_name, body=pipeline_config
-    )
-    index_config["settings"] = {
-        "index.default_pipeline": pipeline_name,
-    }
-    index_response = create_index(
-        client, index_name, index_config, delete_existing=True
-    )
-    return index_response, pipeline_response
+#     Returns:
+#         str: The name of the text field.
+#     """
+#     response = client.ml.get_trained_models(model_id=model_id)
+#     return response.body["trained_model_configs"][0]["input"]["field_names"][0]
 
 
-def create_index_with_elser_ingestion_pipeline(
-    client: elasticsearch.Elasticsearch,
-    index_name: str,
-    pipeline_name: str = "elser_ingestion_pipeline",
-    index_text_field: str = "text",
-    index_embedding_field: str = "sparse_embedding",
-    embedding_model_id: str = ".elser_model_2_linux-x86_64",
-) -> Tuple[elastic_transport.ObjectApiResponse, elastic_transport.ObjectApiResponse]:
-    """
-    Creates an elasticsearch.Elasticsearch index that embeds docuemnt text into an embedding field
-    using the ELSER model automatically on document ingestion.
+# def create_index_with_default_pipeline(
+#     client: elasticsearch.Elasticsearch,
+#     index_name: str,
+#     index_config: dict,
+#     pipeline_config: dict,
+#     pipeline_name: str = "default_pipeline",
+# ) -> Tuple[elastic_transport.ObjectApiResponse, elastic_transport.ObjectApiResponse]:
+#     """
+#     Creates an elasticsearch.Elasticsearch index with a default ingestion pipeline.
 
-    Args:
-        client (elasticsearch.Elasticsearch): The elasticsearch.Elasticsearch client.
-        index_name (str): The name of the index to be created.
-        pipeline_name (str, optional): The name of the ingestion pipeline.
-            Defaults to "elser_ingestion_pipeline".
-        index_text_field (str, optional): The name of the field in the index containing the document text.
-            Defaults to "text".
-        index_embedding_field (str, optional): The name of the field in the index to store the document embeddings.
-            Defaults to "sparse_embedding".
-        embedding_model_id (str, optional): The ID of the model to use for text embedding.
-            Defaults to ELSER i.e. "elser_model_2_linux-x86_64".
+#     Args:
+#         client (elasticsearch.Elasticsearch): The elasticsearch.Elasticsearch client.
+#         index_name (str): The name of the index to be created.
+#         index_config (dict): The configuration settings for the index.
+#         pipeline_config (dict): The configuration settings for the ingestion pipeline.
+#         pipeline_name (str, optional): The name of the ingestion pipeline. Defaults to "default_pipeline".
 
-    Returns:
-        tuple: A tuple containing the index creation response and the pipeline creation response.
-    """
-    embedding_model_text_field = get_model_text_field(
-        client, model_id=embedding_model_id
-    )
+#     Returns:
+#         tuple: A tuple containing the index creation response and the pipeline creation response.
+#     """
+#     pipeline_response = client.ingest.put_pipeline(
+#         id=pipeline_name, body=pipeline_config
+#     )
+#     index_config["settings"] = {
+#         "index.default_pipeline": pipeline_name,
+#     }
+#     index_response = create_index(
+#         client, index_name, index_config, delete_existing=True
+#     )
+#     return index_response, pipeline_response
 
-    with open("elastic/elastic_templates/pipeline_template.json") as f:
-        elser_pipeline_template = json.load(f)
-    pipeline_config = replace_placeholders_in_JSON_template(
-        elser_pipeline_template,
-        embedding_model_id=embedding_model_id,
-        embedding_model_text_field=embedding_model_text_field,
-        index_text_field=index_text_field,
-        index_embedding_field=index_embedding_field,
-    )
-    with open("elastic/elastic_templates/index_template.json") as f:
-        index_template = json.load(f)
-    index_config = replace_placeholders_in_JSON_template(
-        index_template,
-        index_text_field=index_text_field,
-        index_embedding_field=index_embedding_field,
-    )
-    return create_index_with_default_pipeline(
-        client, index_name, index_config, pipeline_config, pipeline_name=pipeline_name
-    )
+
+# def create_index_with_elser_ingestion_pipeline(
+#     client: elasticsearch.Elasticsearch,
+#     index_name: str,
+#     pipeline_name: str = "elser_ingestion_pipeline",
+#     index_text_field: str = "text",
+#     index_embedding_field: str = "sparse_embedding",
+#     embedding_model_id: str = ".elser_model_2_linux-x86_64",
+# ) -> Tuple[elastic_transport.ObjectApiResponse, elastic_transport.ObjectApiResponse]:
+#     """
+#     Creates an elasticsearch.Elasticsearch index that embeds docuemnt text into an embedding field
+#     using the ELSER model automatically on document ingestion.
+
+#     Args:
+#         client (elasticsearch.Elasticsearch): The elasticsearch.Elasticsearch client.
+#         index_name (str): The name of the index to be created.
+#         pipeline_name (str, optional): The name of the ingestion pipeline.
+#             Defaults to "elser_ingestion_pipeline".
+#         index_text_field (str, optional): The name of the field in the index containing the document text.
+#             Defaults to "text".
+#         index_embedding_field (str, optional): The name of the field in the index to store the document embeddings.
+#             Defaults to "sparse_embedding".
+#         embedding_model_id (str, optional): The ID of the model to use for text embedding.
+#             Defaults to ELSER i.e. "elser_model_2_linux-x86_64".
+
+#     Returns:
+#         tuple: A tuple containing the index creation response and the pipeline creation response.
+#     """
+#     embedding_model_text_field = get_model_text_field(
+#         client, model_id=embedding_model_id
+#     )
+
+#     with open("elastic/elastic_templates/pipeline_template.json") as f:
+#         elser_pipeline_template = json.load(f)
+#     pipeline_config = replace_placeholders_in_JSON_template(
+#         elser_pipeline_template,
+#         embedding_model_id=embedding_model_id,
+#         embedding_model_text_field=embedding_model_text_field,
+#         index_text_field=index_text_field,
+#         index_embedding_field=index_embedding_field,
+#     )
+#     with open("elastic/elastic_templates/index_template.json") as f:
+#         index_template = json.load(f)
+#     index_config = replace_placeholders_in_JSON_template(
+#         index_template,
+#         index_text_field=index_text_field,
+#         index_embedding_field=index_embedding_field,
+#     )
+#     return create_index_with_default_pipeline(
+#         client, index_name, index_config, pipeline_config, pipeline_name=pipeline_name
+#     )
 
 
 @dataclasses.dataclass
