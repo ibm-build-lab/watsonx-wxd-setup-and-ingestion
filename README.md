@@ -13,10 +13,6 @@ Currently supported file types:
 | `.txt` | [LlamaHub Unstructured File Loader](https://llamahub.ai/l/readers/llama-index-readers-file?from=readers) |
 | `.html` | [LlamaHub Unstructured File Loader](https://llamahub.ai/l/readers/llama-index-readers-file?from=readers) |
 
-Currently supported file locations:
-1. Local directories
-1. Cloud Object Storage
-
 ## Prerequisites
 
 This repository assumes that you have an instance of **Databases for Elasticsearch** Platinum edition deployed on **IBM Cloud**. To deploy this service on **IBM Cloud**, see [Setting up Elasticsearch with Kibana and Enterprise Search](https://cloud.ibm.com/docs/databases-for-elasticsearch?topic=databases-for-elasticsearch-tutorial-elasticsearch-enterprise-search-tutorial). The Platinum edition is required to use the ELSER model in **Elasticsearch**, which is leveraged for semantic search. If this is not available, you can also test this repository using **Elasticsearch** deployed on an Openshift cluster or locally. For guidance on deploying Elasticsearch locally, refer to the [official Elasticsearch documentation](https://www.elastic.co/guide/en/elasticsearch/reference/current/run-elasticsearch-locally.html), or use the Dockerfile provided in the `container_setup` directory.
@@ -86,13 +82,15 @@ python3 elastic/utils.py
 ```
 
 ### Ingesting your documents
-The next step is to source your documents that you wish to ingest into Elasticsearch. Documents can be ingested into Elasticsearch via a directory on your local machine or through a bucket in Cloud Object Storage on IBM Cloud. Currently, the supported file types are `.pdf, .txt, .docx, .pptx`. Note that not all `.pptx` files may be supported. 
+The next step is to source your documents that you wish to ingest into Elasticsearch. Currently, only local document ingestion is supported in this utility.
 
-- If you wish to ingest documents through a local directory, save all the documents to a directory and note the path of the directory. All documents within the directory path will be ingested.
+The supported file types are `.pdf, .txt, .docx, .pptx`. Note that not all `.pptx` files may be supported. 
 
-- If you wish to ingest documents through Cloud Object Storage, load the files documents into a bucket in your configured instance of Cloud Object Storage and save the name of the bucket. For details on setting up a Cloud Object Storage bucket, refer to this documentation [Getting started with Cloud Object Storage](https://cloud.ibm.com/docs/cloud-object-storage/basics/archive.html?topic=cloud-object-storage-getting-started-cloud-object-storage). You will need to create credentials to your Cloud Object Storage instance and copy them into a file as a JSON object. See an example in `configs/filestore_creds/cos_service_credentials.json`
+To ingest documents using this utility, save all the documents to a subdirectory with the `./data` directory. All documents within the directory path will be ingested.
 
 A small collection of sample documents is provided below in the [sample data section](#sample-data).
+
+**NOTE:** To ingest documents from Cloud Object Storage, see [github.com/ibm-build-lab/RAG-LLM-Service](https://github.com/ibm-build-lab/RAG-LLM-Service).  This application provides an `ingestDocs` api that can ingest from COS into an Elasticsearch index
 
 #### Customize the config YAML file
 
@@ -101,10 +99,10 @@ The scripts for setting up Elasticsearch and ingesting your documents can be con
 
 | Field                                  | Default Value   | Description                                                                                       |
 |----------------------------------------|--------------------------|---------------------------------------------------------------------------------------------------|
-| `ingest.file_store.type`               | `local`                  | The type of file store. Can be `cos` (Cloud Object Storage) or `local`.                           |
-| `ingest.file_store.location`           | `data/nvidia`    | If `cos`, the name of the bucket. If `local`, a directory path relative to current directory.                                 |
-| `ingest.file_store.service_credentials_path` | `null`              | The path to the service credentials if `cos` is the type of file store.                                                              |
-| `ingest.file_store.num_files_to_ingest` | `500`                   | The number of files to ingest.                                                                    |
+| `ingest.file_store.type`               | `local`                  | The type of file store. Allowed values are `local` or `cos` however cos is not supported at this time                       |
+| `ingest.file_store.location`           | `data/nvidia`    | If `local`, a directory path relative to current directory.  If `cos`, the name of the bucket (NOTE: cos is not supported at this time)                               |
+| `ingest.file_store.service_credentials_path` | `null`              | The path to the cos service credentials. (NOTE: cos is not supported at this time)                                                           |
+| `ingest.file_store.num_files_to_ingest` | `500`                   | Max number of files to ingest.                                                                    |
 | `ingest.elasticsearch.index_name`      | `new-doc-index` | The name of the index to ingest into.                                                             |
 | `ingest.elasticsearch.index_text_field`| `body_content_field`     | The name of the field in the index used to store document text.                                   |
 | `ingest.elasticsearch.index_embedding_field` | `sparse_embedding` | The name of the field in the index used to store embeddings. 
