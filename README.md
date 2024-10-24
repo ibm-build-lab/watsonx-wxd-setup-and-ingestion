@@ -41,18 +41,17 @@ To authenticate to Elasticsearch, you will need:
 - password
 - database URL
 - port
-- SSL certificate
 
 <details> 
 <summary> Expand for details on how to get these values from Databases for Elasticsearch on IBM Cloud </summary>
 
 If you have a Databases for Elasticsearch configured on IBM Cloud, you can get these values by going to your resource list in IBM Cloud and selecting Elasticsearch under your database resources. 
 
-1. In the overview tab of your Elasticsearch resource, scroll to the bottom and select the https endpoint. Here, you will find your **hostname**, **port**, and **SSL certificate**.
+1. In the overview tab of your Elasticsearch resource, scroll to the bottom and select the https endpoint. Here, you will find your **hostname**, **port**.
 
     <img src="images/get_cert_and_route.png" alt="Location of hostname and certificate" width="1800"/>
 
-    Note the **hostname** and the **port**, and save a copy of the **SSL certificate** to a directory in this repostiory
+    Note the **hostname** and the **port**
 
 1. Next, go top the service **credentials** tab and expand the **service credentials**. Note the **username** and **password**.
 
@@ -65,14 +64,12 @@ Once you have these credentials, go into the ```elastic``` folder inside the rep
 
 - Replace the value after ```ELASTIC_URL``` with ```https://<hostname>:<port>``` 
 - Replace the value after ```ELASTIC_USERNAME``` and ```ELASTIC_PASSWORD``` with the username and password for Elasticsearch
-- Replace the value after ```ELASTIC_CERT_PATH``` with the relative path (from this top-level directory) of the SSL certificate you copied into the repository.  
 
 An example `.env` file would look like this
 ```
 ELASTIC_URL="https://****************************.databases.appdomain.cloud:31898"
 ELASTIC_USERNAME="admin"
 ELASTIC_PASSWORD="******************"
-ELASTIC_CERT_PATH="./elastic/ES_Cert/cert_file"
 ```
 
 (Optional) Verify the connection to Elasticsearch. Run the following command:
@@ -122,6 +119,11 @@ Once you have finished making your config file, copy the path to your config and
   1. Creates an index with the index name specified in the config file based on ```elastic/configs/index_config.json``` and a default pipeline with a name specified in the config file based on 
   ```elastic/configs/inference_pipeline_config.json```
   2. Use the pipeline to ingest your documents into the index based on the fields under the `ingest` section of the config. 
+
+NOTE: LlamaIndex `SimpleDirectoryReader` relies on the `python-magic` package which in turn requires the native `libmagic` library. If this is missing from your environment, you can install it using: 
+```
+brew install libmagic
+```
 
 Once ingestion is complete, your documents are ready to be used for RAG use cases. 
 
