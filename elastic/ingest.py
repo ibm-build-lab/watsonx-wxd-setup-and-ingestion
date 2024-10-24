@@ -37,7 +37,6 @@ from elastic.utils import (
     get_async_elasticsearch_client_from_env,
     get_elasticsearch_client_from_env,
 )
-#from elastic.setup import create_index_with_elser_ingestion_pipeline
 
 logger = logging.getLogger(__name__)
 
@@ -120,58 +119,21 @@ def create_index(
 
     """
     logger.info("Creating the index...")
-    index_already_exists = client.indices.exists(index=index_name).body
-    if delete_existing and index_already_exists:
-        client.indices.delete(index=index_name)
-    response = client.indices.create(index=index_name, body=index_settings)
+    index_already_exists = client.indices.exists(index=index_name)
+    if index_already_exists:
+        if delete_existing:
+            # Delete the existing index if requested
+            client.indices.delete(index=index_name)
+            # Create a new index after deletion
+            response = client.indices.create(index=index_name, body=index_settings)
+        else:
+            # Return the existing index status
+            response = client.indices.get(index=index_name)
+    else:
+        # Create the new index since it doesn't exist
+        response = client.indices.create(index=index_name, body=index_settings)
+
     return response
-
-
-def get_model_text_field(client: elasticsearch.Elasticsearch, model_id: str) -> str:
-    """
-    Retrieves the text field name from a trained model configuration.
-
-    Args:
-        client (elasticsearch.Elasticsearch): The elasticsearch.Elasticsearch client.
-        model_id (str): The ID of the trained model.
-
-    Returns:
-        str: The name of the text field.
-    """
-    response = client.ml.get_trained_models(model_id=model_id)
-    return response.body["trained_model_configs"][0]["input"]["field_names"][0]
-
-
-# def create_index_with_default_pipeline(
-#     client: elasticsearch.Elasticsearch,
-#     index_name: str,
-#     index_config: dict,
-#     pipeline_config: dict,
-#     pipeline_name: str = "default_pipeline",
-# ) -> tuple[elastic_transport.ObjectApiResponse, elastic_transport.ObjectApiResponse]:
-#     """
-#     Creates an elasticsearch.Elasticsearch index with a default ingestion pipeline.
-
-#     Args:
-#         client (elasticsearch.Elasticsearch): The elasticsearch.Elasticsearch client.
-#         index_name (str): The name of the index to be created.
-#         index_config (dict): The configuration settings for the index.
-#         pipeline_config (dict): The configuration settings for the ingestion pipeline.
-#         pipeline_name (str, optional): The name of the ingestion pipeline. Defaults to "default_pipeline".
-
-#     Returns:
-#         tuple: A tuple containing the index creation response and the pipeline creation response.
-#     """
-#     pipeline_response = client.ingest.put_pipeline(
-#         id=pipeline_name, body=pipeline_config
-#     )
-#     index_config["settings"] = {
-#         "index.default_pipeline": pipeline_name,
-#     }
-#     index_response = create_index(
-#         client, index_name, index_config, delete_existing=False
-#     )
-#     return index_response, pipeline_response
 
 
 def create_index_with_elser_ingestion_pipeline(
@@ -201,9 +163,8 @@ def create_index_with_elser_ingestion_pipeline(
     Returns:
         tuple: A tuple containing the index creation response and the pipeline creation response.
     """
-    embedding_model_text_field = get_model_text_field(
-        client, model_id=embedding_model_id
-    )
+    response = client.ml.get_trained_models(model_id=embedding_model_id)
+    embedding_model_text_field = response.body["trained_model_configs"][0]["input"]["field_names"][0]
 
     # Prepare pipeline config but replacing values in template
     with open("elastic/elastic_templates/pipeline_template.json") as f:
@@ -217,6 +178,10 @@ def create_index_with_elser_ingestion_pipeline(
         index_embedding_field=index_embedding_field,
     )
 
+    pipeline_response = client.ingest.put_pipeline(
+        id=pipeline_name, body=pipeline_config
+    )
+
     # Prepare index config but replacing values in template
     with open("elastic/elastic_templates/index_template.json") as f:
         index_template = json.load(f)
@@ -225,10 +190,6 @@ def create_index_with_elser_ingestion_pipeline(
         index_template,
         index_text_field=index_text_field,
         index_embedding_field=index_embedding_field,
-    )
-
-    pipeline_response = client.ingest.put_pipeline(
-        id=pipeline_name, body=pipeline_config
     )
 
     index_config["settings"] = {
@@ -241,12 +202,8 @@ def create_index_with_elser_ingestion_pipeline(
 
     return index_response, pipeline_response
 
-    # return create_index_with_default_pipeline(
-    #     client, index_name, index_config, pipeline_config, pipeline_name=pipeline_name
-    # )
-
 def initialize_index_from_config(
-    config: IngestConfig, show_progress=True, create_index_in_elastic=True
+    config: IngestConfig, show_progress=True
 ) -> llama_index.core.VectorStoreIndex:
     """
     Initializes and returns a VectorStoreIndex based on the provided configuration.
@@ -255,7 +212,6 @@ def initialize_index_from_config(
     Args:
         config (IngestConfig): The configuration object containing the necessary settings.
         show_progress (bool, optional): Whether to show progress during the initialization process. Defaults to True.
-        create_index_in_elastic (bool, optional): Whether to create the index in Elasticsearch. Defaults to True.
 
     Returns:
         llama_index.core.VectorStoreIndex: The initialized VectorStoreIndex.
@@ -279,14 +235,15 @@ def initialize_index_from_config(
         chunk_size=CHUNK_SIZE, chunk_overlap=CHUNK_OVERLAP
     )
 
-    if create_index_in_elastic:
-        es_client = get_elasticsearch_client_from_env()
-        create_index_with_elser_ingestion_pipeline(
-            es_client,
-            index_name=INDEX_NAME,
-            index_text_field=INDEX_TEXT_FIELD,
-        )
-
+    # Get the ES Client and create index and pipeline
+    es_client = get_elasticsearch_client_from_env()
+    create_index_with_elser_ingestion_pipeline(
+        es_client,
+        index_name=INDEX_NAME,
+        index_text_field=INDEX_TEXT_FIELD,
+    )
+    
+    # Create a Vector Store object with an async version of the ES client
     vector_store = ElasticsearchStore(
         es_client=get_async_elasticsearch_client_from_env(timeout=180),
         index_name=INDEX_NAME,
@@ -294,8 +251,10 @@ def initialize_index_from_config(
         batch_size=BATCH_SIZE,
     )
     vector_store_add_kwargs = {
-        "create_index_if_not_exists": False,
+        "create_index_if_not_exists": True,
     }
+
+    # Index the documents
     try:
         index = llama_index.core.VectorStoreIndex.from_documents(
             documents,
