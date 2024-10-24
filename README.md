@@ -177,7 +177,7 @@ To test the repository against a more robust set of documents, here is a link to
 1. (Optional) Rename the ```ingest.elasticsearch.index_name``` value to another name of choice
 2. Use the same scripts ```elastic/setup.py``` to set up and ```elastic/ingest.py``` to ingest documents to Elasticsearch, but this time point the script to the     
     ```shell
-    python3 elastic/ingest.py -c "elastic/configs/setup_and_ingest_configs/ibm_config.yaml"
+    python3 elastic/ingest.py -c "configs/ibm_config.yaml"
     ```
 
 
