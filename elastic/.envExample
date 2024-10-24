@@ -3,7 +3,7 @@ ELASTIC_USERNAME=<database username>
 ELASTIC_PASSWORD=<database pwd>
 ELASTIC_CERT_PATH=path/to/elastic.crt
 
-# optional: settings needed to access LLM for search
-IBM_APIKEY=<IBM Cloud API key>
-WML_URL=https://us-south.ml.cloud.ibm.com/ml/v1-beta/generation/text?version=2023-05-29 # Watsonx endpoint
-PROJECT_ID=<watsonx project id>
+# optional: settings needed to access LLM for query.py script
+#IBM_APIKEY=<IBM Cloud API key>
+#WML_URL=https://us-south.ml.cloud.ibm.com/ml/v1-beta/generation/text?version=2023-05-29 # Watsonx endpoint
+#PROJECT_ID=<watsonx project id>
