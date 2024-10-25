@@ -91,7 +91,7 @@ A small collection of sample documents is provided below in the [sample data sec
 
 #### Customize the config YAML file
 
-The scripts for setting up Elasticsearch and ingesting your documents can be configured via a YAML config file. A sample config is provided in the `configs` folder of the repository. Using the `sample_config.yaml` file, create a new config file and populate the values as described below
+The scripts for setting up Elasticsearch and ingesting your documents can be configured via a YAML config file. A sample config is provided in the `configs` folder of this repository. Using the `./configs/sample_config.yaml` file, create a new config file and populate the values as described below
 
 
 | Field                                  | Default Value   | Description                                                                                       |
@@ -112,12 +112,12 @@ The scripts for setting up Elasticsearch and ingesting your documents can be con
 Once you have finished making your config file, copy the path to your config and run the `ingest.py` script
 
   ```python
-  python3 elastic/ingest.py -c "path/to/your/config/file.yaml"
+  python3 elastic/ingest.py -c "./configs/your_config.yaml"
   ```
   This script will use the configuration file and does the following in sequence:
 
-  1. Creates an index with the index name specified in the config file based on ```elastic/configs/index_config.json``` and a default pipeline with a name specified in the config file based on 
-  ```elastic/configs/inference_pipeline_config.json```
+  1. Creates an index with the index name specified in the config file based on ```elastic/elastic_templates/index_template.json``` and a default pipeline with a name specified in the config file based on 
+  ```elastic/elastic_templates/pipeline_template.json```
   2. Use the pipeline to ingest your documents into the index based on the fields under the `ingest` section of the config. 
 
 NOTE: LlamaIndex `SimpleDirectoryReader` relies on the `python-magic` package which in turn requires the native `libmagic` library. If this is missing from your environment, you can install it using: 
