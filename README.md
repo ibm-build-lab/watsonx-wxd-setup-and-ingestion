@@ -83,11 +83,11 @@ The next step is to source your documents that you wish to ingest into Elasticse
 
 The supported file types are `.pdf, .txt, .docx, .pptx`. Note that not all `.pptx` files may be supported. 
 
-To ingest documents using this utility, save all the documents to a subdirectory with the `./data` directory. All documents within the directory path will be ingested.
+To ingest documents using this utility, save all the documents to a subdirectory within the `./data` directory, i.e. `./data/newdocs`. All documents within the directory path will be ingested.
 
-A small collection of sample documents is provided below in the [sample data section](#sample-data).
+A small collection of sample documents is provided below in the [sample data section](#sample-data) section.
 
-**NOTE:** To ingest documents from Cloud Object Storage, see [github.com/ibm-build-lab/RAG-LLM-Service](https://github.com/ibm-build-lab/RAG-LLM-Service).  This application provides an `ingestDocs` api that can ingest from COS into an Elasticsearch index
+**NOTE:** Until the ability to read from Cloud Object Storage is fixed in this utility, we have another application that can ingest documents from Cloud Object Storage, see [github.com/ibm-build-lab/RAG-LLM-Service](https://github.com/ibm-build-lab/RAG-LLM-Service).  That application provides an `ingestDocs` api that can ingest from COS into an Elasticsearch index
 
 #### Customize the config YAML file
 
