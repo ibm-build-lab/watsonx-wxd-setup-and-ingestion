@@ -50,7 +50,10 @@ def get_elasticsearch_client_from_env(**kwargs) -> elasticsearch.Elasticsearch:
     """
     url, username, password, cert_path = _get_elasticsearch_credentials_from_env()
     client = elasticsearch.Elasticsearch(
+<<<<<<< Updated upstream
         #url, ca_certs=cert_path, basic_auth=(username, password), **kwargs
+=======
+>>>>>>> Stashed changes
         url, verify_certs=False, basic_auth=(username, password), **kwargs
     )
     client.info()  # Check if client is working
@@ -74,7 +77,10 @@ def get_async_elasticsearch_client_from_env(
     url, username, password, cert_path = _get_elasticsearch_credentials_from_env()
     get_elasticsearch_client_from_env()  # Check if client is working
     return elasticsearch.AsyncElasticsearch(
+<<<<<<< Updated upstream
         #url, ca_certs=cert_path, basic_auth=(username, password), **kwargs
+=======
+>>>>>>> Stashed changes
         url, verify_certs=False, basic_auth=(username, password), **kwargs
     )
 
