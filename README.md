@@ -144,9 +144,21 @@ GET <index_name>/_search
     }
 }
 ```
+Then click the **>** to left of the command to execute it.
 
-
-Then click the **>** to left of the command to execute it
+To connect up to **watsonx Assistant** Conversational search, see [Conversational search](https://www.ibm.com/docs/en/watsonx/watson-orchestrate/current?topic=assistants-conversational-search).  In the **Advanced Elasticsearch Settings** add
+```
+{
+    "query":{
+        "text_expansion":{
+            "ml.sparse_embedding":{
+                "model_id":".elser_model_2_linux-x86_64",                  
+                "model_text":"$QUERY"
+            }
+        }
+    }
+}
+```
 
 Note: 
 - **index_name**: name of the index containing your ingested documents with embeddings
